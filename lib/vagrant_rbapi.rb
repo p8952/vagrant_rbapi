@@ -1,7 +1,7 @@
 require "vagrant_rbapi/version"
 
-class VagrantRbapi
-  
+class Vagrant_Rbapi
+
 	def which
 		'/usr/local/bin/vagrant'
 	end
