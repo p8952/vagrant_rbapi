@@ -53,9 +53,11 @@ class Vagrant_Rbapi
 	def ssh(cmd)
 		raise VagrantRbapi::BoxNotRunning if self.status != 'running'
 		config = ssh_config
-		return Net::SSH.start(config[0], config[1], port: config[2], key_data: [File.read(config[3])]) do |ssh|
+		out = Net::SSH.start(config[0], config[1], port: config[2], key_data: [File.read(config[3])]) do |ssh|
 			ssh.exec!(cmd)
 		end
+		out.strip! unless out.nil?
+		return out
 	end
 
 	def halt
