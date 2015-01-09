@@ -1,4 +1,5 @@
-require "vagrant_rbapi/version"
+require 'vagrant_rbapi/version'
+require 'vagrant_rbapi/exceptions'
 
 require 'net/ssh'
 require 'open3'
@@ -34,11 +35,13 @@ class Vagrant_Rbapi
 	end
 
 	def up
+		raise VagrantRbapi::BoxAlreadyRunning if self.status == 'running'
 		out, err, val = vagrant_cmd(['up'])
 		return val
 	end
 
 	def ssh_config
+		raise VagrantRbapi::BoxNotRunning if self.status != 'running'
 		out, err, val = vagrant_cmd(['ssh-config'])
 		hostname = out[/HostName (.*)$/, 1].strip
 		user = out[/User (.*)$/, 1].strip
@@ -48,6 +51,7 @@ class Vagrant_Rbapi
 	end
 
 	def ssh(cmd)
+		raise VagrantRbapi::BoxNotRunning if self.status != 'running'
 		config = ssh_config
 		return Net::SSH.start(config[0], config[1], port: config[2], key_data: [File.read(config[3])]) do |ssh|
 			ssh.exec!(cmd)
@@ -55,11 +59,13 @@ class Vagrant_Rbapi
 	end
 
 	def halt
+		raise VagrantRbapi::BoxNotRunning if self.status != 'running'
 		out, err, val = vagrant_cmd(['halt', '--force'])
 		return val
 	end
 
 	def destroy
+		raise VagrantRbapi::BoxNotCreated if self.status == 'not created'
 		out, err, val = vagrant_cmd(['destroy', '--force'])
 		return val
 	end
