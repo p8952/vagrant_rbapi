@@ -1,6 +1,6 @@
 require "vagrant_rbapi/version"
 
-require 'mkmf'
+require 'net/ssh'
 require 'open3'
 
 class Vagrant_Rbapi
@@ -9,7 +9,11 @@ class Vagrant_Rbapi
 	end
 
 	def vagrant_bin
-		find_executable('vagrant')
+		ENV['PATH'].split(File::PATH_SEPARATOR).each do |dir|
+			if File.executable?(File.join(dir, 'vagrant'))
+				return File.join(dir, 'vagrant')
+			end
+		end
 	end
 
 	def vagrant_cmd(cmd)
@@ -25,36 +29,38 @@ class Vagrant_Rbapi
 
 	def status
 		out, err, val = vagrant_cmd(['status'])
-		puts out
-		puts err
-		puts val
+		status = out[/default(.*)\(/, 1].strip
+		return status
 	end
 
 	def up
 		out, err, val = vagrant_cmd(['up'])
-		puts out
-		puts err
-		puts val
+		return val
 	end
 
 	def ssh_config
 		out, err, val = vagrant_cmd(['ssh-config'])
-		puts out
-		puts err
-		puts val
+		hostname = out[/HostName (.*)$/, 1].strip
+		user = out[/User (.*)$/, 1].strip
+		port = out[/Port (.*)$/, 1].strip
+		identityfile = out[/IdentityFile (.*)$/, 1].strip
+		return hostname, user, port, identityfile
+	end
+
+	def ssh(cmd)
+		config = ssh_config
+		return Net::SSH.start(config[0], config[1], port: config[2], key_data: [File.read(config[3])]) do |ssh|
+			ssh.exec!(cmd)
+		end
 	end
 
 	def halt
 		out, err, val = vagrant_cmd(['halt', '--force'])
-		puts out
-		puts err
-		puts val
+		return val
 	end
 
 	def destroy
 		out, err, val = vagrant_cmd(['destroy', '--force'])
-		puts out
-		puts err
-		puts val
+		return val
 	end
 end
