@@ -34,9 +34,9 @@ class Vagrant_Rbapi
 		return status
 	end
 
-	def up
+	def up(provider = 'virtualbox')
 		raise VagrantRbapi::BoxAlreadyRunning if self.status == 'running'
-		out, err, val = vagrant_cmd(['up'])
+		out, err, val = vagrant_cmd(['up', "--provider=#{provider}"])
 		return val
 	end
 

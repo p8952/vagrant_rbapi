@@ -14,7 +14,7 @@ class TestSSH < MiniTest::Unit::TestCase
 	def test_up_ssh_destroy
 		assert_equal('not created', @vagrant.status)
 
-		assert_equal("0", @vagrant.up)
+		assert_equal('0', @vagrant.up)
 		assert_equal('running', @vagrant.status)
 
 		assert_includes(@vagrant.ssh('cat /etc/lsb-release'), 'Ubuntu 12.04 LTS')
@@ -24,7 +24,7 @@ class TestSSH < MiniTest::Unit::TestCase
 		sleep 5 while @vagrant.status == 'running'
 		assert_equal('poweroff', @vagrant.status)
 
-		assert_equal("0", @vagrant.destroy)
+		assert_equal('0', @vagrant.destroy)
 		assert_equal('not created', @vagrant.status)
 	end
 end
