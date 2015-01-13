@@ -11,7 +11,7 @@ class TestHalt < MiniTest::Unit::TestCase
 		Dir.chdir('../..')
 	end
 
-	def test_up_halt_destroy
+	def test_halt
 		assert_equal('not created', @vagrant.status)
 
 		@vagrant.up
@@ -24,7 +24,7 @@ class TestHalt < MiniTest::Unit::TestCase
 		assert_equal('not created', @vagrant.status)
 	end
 
-	def test_up_halt_halt_destroy
+	def test_halt_halt
 		assert_equal('not created', @vagrant.status)
 
 		@vagrant.up

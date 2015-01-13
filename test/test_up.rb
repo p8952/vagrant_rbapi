@@ -11,7 +11,7 @@ class TestUp < MiniTest::Unit::TestCase
 		Dir.chdir('../..')
 	end
 
-	def test_up_destroy
+	def test_up
 		assert_equal('not created', @vagrant.status)
 
 		@vagrant.up
@@ -21,7 +21,20 @@ class TestUp < MiniTest::Unit::TestCase
 		assert_equal('not created', @vagrant.status)
 	end
 
-	def test_up_vbox_destroy
+	def test_up_up
+		assert_equal('not created', @vagrant.status)
+
+		@vagrant.up
+		assert_equal('running', @vagrant.status)
+
+		assert_raises(VagrantRbapi::BoxAlreadyRunning) { @vagrant.up }
+		assert_equal('running', @vagrant.status)
+
+		@vagrant.destroy
+		assert_equal('not created', @vagrant.status)
+	end
+
+	def test_up_vbox
 		assert_equal('not created', @vagrant.status)
 
 		@vagrant.up('virtualbox')
@@ -35,19 +48,6 @@ class TestUp < MiniTest::Unit::TestCase
 		assert_equal('not created', @vagrant.status)
 
 		assert_raises(VagrantRbapi::CommandReturnedNonZero) { @vagrant.up('foobar') }
-		assert_equal('not created', @vagrant.status)
-	end
-
-	def test_up_up_destroy
-		assert_equal('not created', @vagrant.status)
-
-		@vagrant.up
-		assert_equal('running', @vagrant.status)
-
-		assert_raises(VagrantRbapi::BoxAlreadyRunning) { @vagrant.up }
-		assert_equal('running', @vagrant.status)
-
-		@vagrant.destroy
 		assert_equal('not created', @vagrant.status)
 	end
 end

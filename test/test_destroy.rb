@@ -11,7 +11,7 @@ class TestDestroy < MiniTest::Unit::TestCase
 		Dir.chdir('../..')
 	end
 
-	def test_up_destroy
+	def test_destroy
 		assert_equal('not created', @vagrant.status)
 
 		@vagrant.up
@@ -21,7 +21,7 @@ class TestDestroy < MiniTest::Unit::TestCase
 		assert_equal('not created', @vagrant.status)
 	end
 
-	def test_up_destroy_destroy
+	def test_destroy_destroy
 		assert_equal('not created', @vagrant.status)
 
 		@vagrant.up

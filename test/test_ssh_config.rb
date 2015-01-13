@@ -11,7 +11,7 @@ class TestSSHConfig < MiniTest::Unit::TestCase
 		Dir.chdir('../..')
 	end
 
-	def test_up_ssh_config_destroy
+	def test_ssh_config
 		assert_equal('not created', @vagrant.status)
 
 		@vagrant.up

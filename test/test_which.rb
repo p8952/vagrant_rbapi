@@ -11,7 +11,7 @@ class TestWhich < MiniTest::Unit::TestCase
 		Dir.chdir('../..')
 	end
 
-	def test_which_with_vagrant_in_path
+	def test_which
 		assert_equal `which vagrant`.strip, @vagrant.vagrant_bin
 	end
 end
