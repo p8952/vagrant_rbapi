@@ -15,16 +15,13 @@ Usage
     irb(main):003:0> vagrant.status
     => "not created"
     irb(main):004:0> vagrant.up    
-    => "0"
     irb(main):005:0> vagrant.status
     => "running"
     irb(main):006:0> vagrant.ssh('uname -a')
     => "Linux precise64 3.2.0-23-generic #36-Ubuntu SMP Tue Apr 10 20:39:51 UTC 2012 x86_64 x86_64 x86_64 GNU/Linux"
     irb(main):007:0> vagrant.halt
-    => "0"
     irb(main):008:0> vagrant.status
     => "poweroff"
     irb(main):009:0> vagrant.destroy
-    => "0"
     irb(main):010:0> vagrant.status
     => "not created"
