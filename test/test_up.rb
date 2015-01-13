@@ -14,40 +14,40 @@ class TestUp < MiniTest::Unit::TestCase
 	def test_up_destroy
 		assert_equal('not created', @vagrant.status)
 
-		assert_equal('0', @vagrant.up)
+		@vagrant.up
 		assert_equal('running', @vagrant.status)
 
-		assert_equal('0', @vagrant.destroy)
+		@vagrant.destroy
 		assert_equal('not created', @vagrant.status)
 	end
 
 	def test_up_vbox_destroy
 		assert_equal('not created', @vagrant.status)
 
-		assert_equal('0', @vagrant.up('virtualbox'))
+		@vagrant.up('virtualbox')
 		assert_equal('running', @vagrant.status)
 
-		assert_equal('0', @vagrant.destroy)
+		@vagrant.destroy
 		assert_equal('not created', @vagrant.status)
 	end
 
 	def test_up_foobar
 		assert_equal('not created', @vagrant.status)
 
-		assert_equal('1', @vagrant.up('foobar'))
+		assert_raises(VagrantRbapi::CommandReturnedNonZero) { @vagrant.up('foobar') }
 		assert_equal('not created', @vagrant.status)
 	end
 
 	def test_up_up_destroy
 		assert_equal('not created', @vagrant.status)
 
-		assert_equal('0', @vagrant.up)
+		@vagrant.up
 		assert_equal('running', @vagrant.status)
 
 		assert_raises(VagrantRbapi::BoxAlreadyRunning) { @vagrant.up }
 		assert_equal('running', @vagrant.status)
 
-		assert_equal('0', @vagrant.destroy)
+		@vagrant.destroy
 		assert_equal('not created', @vagrant.status)
 	end
 end

@@ -23,26 +23,36 @@ class Vagrant_Rbapi
 		Open3.popen3(ENV, cmd) do |stdin, stdout, stderr, wait_thr|
 			out = stdout.read.to_s
 			err = stderr.read.to_s
-			val = wait_thr.value.to_s.split.last
+			val = wait_thr.value.to_s.split.last.to_i
 		end
-		return out, err, val
+		raise VagrantRbapi::CommandReturnedNonZero unless val == 0
+		return out
 	end
 
 	def status
-		out, err, val = vagrant_cmd(['status'])
+		out = vagrant_cmd(['status'])
 		status = out[/default(.*)\(/, 1].strip
 		return status
 	end
 
 	def up(provider = 'virtualbox')
 		raise VagrantRbapi::BoxAlreadyRunning if self.status == 'running'
-		out, err, val = vagrant_cmd(['up', "--provider=#{provider}"])
-		return val
+		vagrant_cmd(['up', "--provider=#{provider}"])
+	end
+
+	def halt
+		raise VagrantRbapi::BoxNotRunning if self.status != 'running'
+		vagrant_cmd(['halt', '--force'])
+	end
+
+	def destroy
+		raise VagrantRbapi::BoxNotCreated if self.status == 'not created'
+		vagrant_cmd(['destroy', '--force'])
 	end
 
 	def ssh_config
 		raise VagrantRbapi::BoxNotRunning if self.status != 'running'
-		out, err, val = vagrant_cmd(['ssh-config'])
+		out = vagrant_cmd(['ssh-config'])
 		hostname = out[/HostName (.*)$/, 1].strip
 		user = out[/User (.*)$/, 1].strip
 		port = out[/Port (.*)$/, 1].strip
@@ -58,17 +68,5 @@ class Vagrant_Rbapi
 		end
 		out.strip! unless out.nil?
 		return out
-	end
-
-	def halt
-		raise VagrantRbapi::BoxNotRunning if self.status != 'running'
-		out, err, val = vagrant_cmd(['halt', '--force'])
-		return val
-	end
-
-	def destroy
-		raise VagrantRbapi::BoxNotCreated if self.status == 'not created'
-		out, err, val = vagrant_cmd(['destroy', '--force'])
-		return val
 	end
 end
