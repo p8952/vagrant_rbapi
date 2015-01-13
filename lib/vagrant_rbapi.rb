@@ -1,6 +1,7 @@
 require 'vagrant_rbapi/version'
 require 'vagrant_rbapi/exceptions'
 
+require 'net/scp'
 require 'net/ssh'
 require 'open3'
 
@@ -68,5 +69,19 @@ class Vagrant_Rbapi
 		end
 		out.strip! unless out.nil?
 		return out
+	end
+
+	def scp(direction, recursive, source, destination)
+		raise VagrantRbapi::BoxNotRunning if self.status != 'running'
+		config = ssh_config
+		if direction == :upload
+			Net::SCP.start(config[0], config[1], port: config[2], key_data: [File.read(config[3])]) do |scp|
+				scp.upload!(source, destination, recursive: recursive)
+			end
+		elsif direction == :download
+			Net::SCP.start(config[0], config[1], port: config[2], key_data: [File.read(config[3])]) do |scp|
+				scp.download!(source, destination, recursive: recursive)
+			end
+		end
 	end
 end
