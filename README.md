@@ -1,6 +1,8 @@
 Vagrant Rbapi
 =============
 
+[![Gem Version](https://badge.fury.io/rb/vagrant_rbapi.svg)](http://badge.fury.io/rb/vagrant_rbapi)
+
 Installation
 ------------
 
