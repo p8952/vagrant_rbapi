@@ -2,6 +2,7 @@ Vagrant Rbapi
 =============
 
 [![Gem Version](https://badge.fury.io/rb/vagrant_rbapi.svg)](http://badge.fury.io/rb/vagrant_rbapi)
+[![Inline docs](http://inch-ci.org/github/p8952/vagrant_rbapi.svg?branch=master)](http://inch-ci.org/github/p8952/vagrant_rbapi)
 
 Installation
 ------------
